@@ -1,7 +1,5 @@
 #!/usr/intel/bin/python3.4.1
 
-import io
-import sys
 import random
 
 
