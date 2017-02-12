@@ -1,11 +1,11 @@
-#!/usr/intel/bin/python3.4.1
+#!/usr/bin/python3.4
 
 import random
 
 
 def main():
-    first_names = get_list_of_names_from_file("first_names.txt")
-    last_names = get_list_of_names_from_file("last_names.txt")
+    first_names = get_strings_from_file("first_names.txt")
+    last_names = get_strings_from_file("last_names.txt")
 
     employee_database = generate_employee_database(first_names, last_names)
     write_employee_database(employee_database, "employee_info.db")
@@ -14,14 +14,14 @@ def main():
     write_trip_database(trips_database, "trips.db")
 
 
-def get_list_of_names_from_file(filename):
+def get_strings_from_file(filename):
     with open(filename, 'r') as filehandle:
-        names_list = extract_list_of_names(filehandle)
+        names_list = get_string_from_line(filehandle)
 
     return names_list
 
 
-def extract_list_of_names(text_stream):
+def get_string_from_line(text_stream):
     names_list = list()
     for line in text_stream:
         names_list.append(line.rstrip('\n'))
@@ -64,6 +64,8 @@ def write_employee_database(employee_database, output_filename):
 
 def generate_trip_database(employee_database, num_of_trips):
     number_of_employees = len(employee_database)
+    cities = get_strings_from_file("cities.txt")
+    number_of_cities = len(cities)
     trips = list()
 
     for i in range(0, num_of_trips):
@@ -72,7 +74,7 @@ def generate_trip_database(employee_database, num_of_trips):
         employee = employee_database[get_random_number(0, number_of_employees)]
         trip['date'] = date
         trip['ID'] = employee['ID']
-        trip['city'] = "placeholder"
+        trip['city'] = cities[ get_random_number(0, number_of_cities) ]
         trips.append(trip)
 
     return trips
