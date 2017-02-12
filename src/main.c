@@ -1,21 +1,14 @@
+//*****************************************************************************
+// ECE 588 Project
+// By: Sean Koppenhafer and Luis Santiago
+// Common.h
+//*****************************************************************************
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-#define NUM_EMPLOYEES 20000
-#define NUM_TRIPS 100000
-
-typedef struct {
-    uint32_t ID;
-    char name[30];
-} employee_data;
-
-typedef struct {
-    uint32_t ID;
-    char timestamp[15];
-    char destination[30];
-} trip_data;
+#include "common.h"
 
 static employee_data employees[NUM_EMPLOYEES];
 static trip_data trips[NUM_TRIPS];
@@ -24,14 +17,13 @@ uint8_t parse_cmdline(int, char**);
 void create_employee_database(employee_data*);
 void create_trip_database(trip_data*);
 
+//*****************************************************************************
+// Functions
+//*****************************************************************************
 int main(int argc, char* argv[]) {
     uint8_t number_of_threads = parse_cmdline(argc, argv);
     create_employee_database(&(employees[0]));
     create_trip_database(&(trips[0]));
-
-    for(uint32_t i = 0; i < NUM_TRIPS; i++) {
-        printf("%s, %u, %s\n", &(trips[i].timestamp[0]), trips[i].ID, &(trips[i].destination[0]));
-    }
 }
 
 
@@ -48,9 +40,6 @@ uint8_t parse_cmdline(int argc, char** argv) {
 }
 
 
-//*****************************************************************************
-// Functions
-//*****************************************************************************
 void create_employee_database(employee_data* employee_database) {
     char* employee_info_filename = "employee_info.db";
 
