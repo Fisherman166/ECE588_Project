@@ -1,13 +1,17 @@
 //*****************************************************************************
 // ECE 588 Project
 // By: Sean Koppenhafer and Luis Santiago
-// Common.h
+// Main.c
 //*****************************************************************************
 
+// For realtime clock
 #include <inttypes.h>
+#include <pthread.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
 #include "common.h"
 #include "join.h"
 
@@ -17,17 +21,26 @@ static trip_data trips[NUM_TRIPS];
 uint8_t parse_cmdline(int, char**);
 void create_employee_database(employee_data*);
 void create_trip_database(trip_data*);
+void get_system_time(struct timespec*);
+unsigned long long int calc_runtime(struct timespec, struct timespec);
 
 //*****************************************************************************
 // Functions
 //*****************************************************************************
 int main(int argc, char* argv[]) {
+    struct timespec start_time, end_time;
+
     //uint8_t number_of_threads = parse_cmdline(argc, argv);
     create_employee_database(&(employees[0]));
     create_trip_database(&(trips[0]));
-
     create_join_database(&(employees[0]), NUM_EMPLOYEES);
+
+    get_system_time(&start_time);
     run_join_operation( &(trips[0]), NUM_TRIPS);
+    get_system_time(&end_time);
+    unsigned long long int runtime = calc_runtime(start_time, end_time);
+    printf("Time = %llu nanoseconds\t(%llu.%09llu sec)\n", runtime, runtime / 1000000000, runtime % 1000000000);
+
     print_joined_database(NUM_EMPLOYEES);
     cleanup_joined_database(NUM_EMPLOYEES);
 }
@@ -80,3 +93,17 @@ void create_trip_database(trip_data* trip_database) {
     fclose(trip_info_FH);
 }
 
+
+void get_system_time(struct timespec* container) {
+    int retval = clock_gettime(CLOCK_REALTIME, container);
+    if(retval != 0) {
+        printf("ERROR: Failed to get system time.\n");
+        exit(-1);
+    }
+}
+
+
+unsigned long long int calc_runtime(struct timespec start_time, struct timespec end_time) {
+    unsigned long long int runtime = 1000000000 * (end_time.tv_sec - start_time.tv_sec) + end_time.tv_nsec - start_time.tv_nsec;
+    return runtime;
+}
