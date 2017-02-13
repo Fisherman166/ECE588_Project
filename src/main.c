@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "common.h"
+#include "join.h"
 
 static employee_data employees[NUM_EMPLOYEES];
 static trip_data trips[NUM_TRIPS];
@@ -21,9 +22,14 @@ void create_trip_database(trip_data*);
 // Functions
 //*****************************************************************************
 int main(int argc, char* argv[]) {
-    uint8_t number_of_threads = parse_cmdline(argc, argv);
+    //uint8_t number_of_threads = parse_cmdline(argc, argv);
     create_employee_database(&(employees[0]));
     create_trip_database(&(trips[0]));
+
+    create_join_database(&(employees[0]), NUM_EMPLOYEES);
+    run_join_operation( &(trips[0]), NUM_TRIPS);
+    print_joined_database(NUM_EMPLOYEES);
+    cleanup_joined_database(NUM_EMPLOYEES);
 }
 
 
