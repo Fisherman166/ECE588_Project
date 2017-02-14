@@ -14,6 +14,7 @@
 #include <sys/time.h>
 #include "common.h"
 #include "serial_join.h"
+#include "parallel_join.h"
 
 static employee_data employees[NUM_EMPLOYEES];
 static trip_data trips[NUM_TRIPS];
@@ -29,20 +30,35 @@ unsigned long long int calc_runtime(struct timespec, struct timespec);
 //*****************************************************************************
 int main(int argc, char* argv[]) {
     struct timespec start_time, end_time;
+    uint8_t number_of_threads = parse_cmdline(argc, argv);
 
-    //uint8_t number_of_threads = parse_cmdline(argc, argv);
     create_employee_database(&(employees[0]));
     create_trip_database(&(trips[0]));
-    serial_create_join_database(&(employees[0]), NUM_EMPLOYEES);
 
-    get_system_time(&start_time);
-    serial_run_join_operation( &(trips[0]), NUM_TRIPS);
-    get_system_time(&end_time);
-    unsigned long long int runtime = calc_runtime(start_time, end_time);
-    printf("Time = %llu nanoseconds\t(%llu.%09llu sec)\n", runtime, runtime / 1000000000, runtime % 1000000000);
+    if(number_of_threads > 1) {
+        parallel_create_join_database(&(employees[0]), &(trips[0]), NUM_EMPLOYEES, number_of_threads);
 
-    serial_print_joined_database(NUM_EMPLOYEES);
-    serial_cleanup_joined_database(NUM_EMPLOYEES);
+        get_system_time(&start_time);
+        run_threads(number_of_threads);
+        get_system_time(&end_time);
+        unsigned long long int runtime = calc_runtime(start_time, end_time);
+        printf("Time = %llu nanoseconds\t(%llu.%09llu sec)\n", runtime, runtime / 1000000000, runtime % 1000000000);
+
+        parallel_print_joined_database(NUM_EMPLOYEES);
+        parallel_cleanup_joined_database(NUM_EMPLOYEES);
+    }
+    else {
+        serial_create_join_database(&(employees[0]), NUM_EMPLOYEES);
+
+        get_system_time(&start_time);
+        serial_run_join_operation( &(trips[0]), NUM_TRIPS);
+        get_system_time(&end_time);
+        unsigned long long int runtime = calc_runtime(start_time, end_time);
+        printf("Time = %llu nanoseconds\t(%llu.%09llu sec)\n", runtime, runtime / 1000000000, runtime % 1000000000);
+
+        serial_print_joined_database(NUM_EMPLOYEES);
+        serial_cleanup_joined_database(NUM_EMPLOYEES);
+    }
 }
 
 
