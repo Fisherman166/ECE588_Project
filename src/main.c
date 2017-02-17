@@ -91,6 +91,7 @@ void create_employee_database(employee_data* employee_database) {
     fclose(employee_info_FH);
 }
 
+
 void create_trip_database(trip_data* trip_database) {
     char* trip_info_filename = "trips.db";
 
@@ -122,3 +123,4 @@ unsigned long long int calc_runtime(struct timespec start_time, struct timespec 
     unsigned long long int runtime = 1000000000 * (end_time.tv_sec - start_time.tv_sec) + end_time.tv_nsec - start_time.tv_nsec;
     return runtime;
 }
+

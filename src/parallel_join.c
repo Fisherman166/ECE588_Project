@@ -128,8 +128,16 @@ void run_threads(uint32_t number_of_threads) {
 
 
 void parallel_print_joined_database(uint32_t num_employees) {
+    FILE* output_file;
+    char* output_filename = "parallel_output.txt";
     bool employee_went_on_trip;
     Node* current_node = NULL;
+
+    output_file = fopen(output_filename, "w");
+    if(output_file == NULL) {
+        printf("ERROR: Failed to open output file named %s\n", output_filename);
+        exit(1);
+    }
 
     for(uint32_t i = 0; i < num_employees; i++) {
         employee_went_on_trip = false;
@@ -140,16 +148,17 @@ void parallel_print_joined_database(uint32_t num_employees) {
         }
         if(!employee_went_on_trip) continue;
 
-        printf("Printing Trips for Employee ID: %u, %s\n", (thread_head_nodes[0])[i].employee_info->ID, (thread_head_nodes[0])[i].employee_info->name);
+        fprintf(output_file, "Printing Trips for Employee ID: %u, %s\n", (thread_head_nodes[0])[i].employee_info->ID, (thread_head_nodes[0])[i].employee_info->name);
         for(uint32_t array = 0; array < number_of_threads; array++) {
             current_node = (thread_head_nodes[array])[i].head;
 
             while(current_node != NULL) {
-                printf("\tTrip Date: %s, Trip Destination: %s\n", current_node->trip_info->timestamp, current_node->trip_info->destination);
+                fprintf(output_file, "\tTrip Date: %s, Trip Destination: %s\n", current_node->trip_info->timestamp, current_node->trip_info->destination);
                 current_node = current_node->next;
             }
         }
     }
+    fclose(output_file);
 }
 
 

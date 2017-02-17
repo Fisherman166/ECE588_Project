@@ -38,18 +38,27 @@ void serial_run_join_operation(trip_data* trip_array, uint32_t num_trips) {
 
 
 void serial_print_joined_database(uint32_t num_employees) {
+    FILE* output_file;
+    char* output_filename = "serial_output.txt";
     Node* current_node = NULL;
+
+    output_file = fopen(output_filename, "w");
+    if(output_file == NULL) {
+        printf("ERROR: Failed to open output file named %s\n", output_filename);
+        exit(1);
+    }
 
     for(uint32_t i = 0; i < num_employees; i++) {
         current_node = employee_node[i].head;
         if(current_node == NULL) continue;
 
-        printf("Printing Trips for Employee ID: %u, %s\n", employee_node[i].employee_info->ID, employee_node[i].employee_info->name);
+        fprintf(output_file, "Printing Trips for Employee ID: %u, %s\n", employee_node[i].employee_info->ID, employee_node[i].employee_info->name);
         while(current_node != NULL) {
-            printf("\tTrip Date: %s, Trip Destination: %s\n", current_node->trip_info->timestamp, current_node->trip_info->destination);
+            fprintf(output_file, "\tTrip Date: %s, Trip Destination: %s\n", current_node->trip_info->timestamp, current_node->trip_info->destination);
             current_node = current_node->next;
         }
     }
+    fclose(output_file);
 }
 
 
