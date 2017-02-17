@@ -4,7 +4,6 @@
 // Main.c
 //*****************************************************************************
 
-// For realtime clock
 #include <inttypes.h>
 #include <pthread.h>
 #include <stdbool.h>

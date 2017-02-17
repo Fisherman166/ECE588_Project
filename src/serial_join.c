@@ -1,60 +1,17 @@
+//*****************************************************************************
+// ECE 588 Project
+// By: Sean Koppenhafer and Luis Santiago
+// serial_join.c
+//*****************************************************************************
+
 #include <stdlib.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include "common.h"
+#include "join_common.h"
 #include "serial_join.h"
 
-typedef struct Node Node;
-
-struct Node {
-    trip_data *trip_info;
-    Node *next;
-};
-
-typedef struct {
-    employee_data *employee_info;
-    Node* head;
-} head_node;
-
-
 static head_node employee_node[NUM_EMPLOYEES];
-
-static Node* allocate_node(trip_data* trip_info, Node* previous_next_node) {
-    Node* new_node = malloc( sizeof(Node) );
-    if(new_node == NULL) {
-        printf("ERROR: Failed to malloc new node\n");
-        exit(1);
-    }
-    new_node->trip_info = trip_info;
-    new_node->next = previous_next_node;
-
-    return new_node;
-}
-
-static void free_nodes(head_node* head_array, uint32_t num_employees) {
-    Node* current_node;
-    Node* next_node;
-
-    for(uint32_t i = 0; i < num_employees; i++) {
-        current_node = employee_node[i].head;
-        while(current_node != NULL) {
-            next_node = current_node->next;
-            free(current_node);
-            current_node = next_node;
-        }
-    }
-}
-
-
-static void add_trip_to_head(Node** head_node, trip_data* trip) {
-
-    if(*head_node == NULL) {
-        *head_node = allocate_node(trip, NULL);
-    }
-    else {
-        *head_node = allocate_node(trip, *head_node);
-    }
-}
 
 
 //*****************************************************************************
@@ -95,6 +52,6 @@ void serial_print_joined_database(uint32_t num_employees) {
 
 
 void serial_cleanup_joined_database(uint32_t num_employees) {
-    free_nodes( &(employee_node[0]), num_employees);
+    free_nodes( &(employee_node[0]), num_employees );
 }
 

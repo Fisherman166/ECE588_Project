@@ -1,3 +1,9 @@
+//*****************************************************************************
+// ECE 588 Project
+// By: Sean Koppenhafer and Luis Santiago
+// parallel_join.h
+//*****************************************************************************
+
 #ifndef PARALLEL_JOIN_H
 #define PARALLEL_JOIN_H
 

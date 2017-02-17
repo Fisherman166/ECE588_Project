@@ -7,6 +7,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <inttypes.h>
+
 #define NUM_EMPLOYEES 20000
 #define NUM_TRIPS 100000
 

@@ -1,3 +1,9 @@
+//*****************************************************************************
+// ECE 588 Project
+// By: Sean Koppenhafer and Luis Santiago
+// parallel_join.c
+//*****************************************************************************
+
 #include <inttypes.h>
 #include <pthread.h>
 #include <stdbool.h>
@@ -5,18 +11,7 @@
 #include <stdlib.h>
 #include "common.h"
 #include "parallel_join.h"
-
-typedef struct Node Node;
-
-struct Node {
-    trip_data *trip_info;
-    Node *next;
-};
-
-typedef struct {
-    employee_data *employee_info;
-    Node* head;
-} head_node;
+#include "join_common.h"
 
 typedef struct {
     head_node* thread_array;
@@ -90,26 +85,6 @@ static thread_args* create_threads(pthread_t* threads, trip_data* trips_array) {
 }
 
 
-static Node* allocate_node(trip_data* trip_info) {
-    Node* new_node = malloc( sizeof(Node) );
-    if(new_node == NULL) {
-        printf("ERROR: Failed to malloc new node\n");
-        exit(1);
-    }
-    new_node->trip_info = trip_info;
-
-    return new_node;
-}
-
-
-static void add_trip_to_head(Node** head_node, trip_data* trip) {
-    Node* new_node = allocate_node(trip);
-    new_node->next = NULL;
-    if(*head_node != NULL) new_node->next = *head_node;
-    *head_node = new_node;
-}
-
-
 static void* parallel_run_join_operation(void* void_args) {
     thread_args* args = (thread_args*)void_args;
     uint32_t employee_ID;
@@ -120,21 +95,6 @@ static void* parallel_run_join_operation(void* void_args) {
     }
 
     return 0;
-}
-
-
-static void free_nodes(head_node* head_array, uint32_t num_employees) {
-    Node* current_node;
-    Node* next_node;
-
-    for(uint32_t i = 0; i < num_employees; i++) {
-        current_node = head_array[i].head;
-        while(current_node != NULL) {
-            next_node = current_node->next;
-            free(current_node);
-            current_node = next_node;
-        }
-    }
 }
 
 
