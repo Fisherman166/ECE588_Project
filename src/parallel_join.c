@@ -106,6 +106,7 @@ void parallel_create_join_database(employee_data* employee_data_array, trip_data
     number_of_threads = num_threads;
     thread_head_nodes = allocate_thread_array_pointers();
 
+    // Initialize the head arrays with the employee information
     for(uint32_t i = 0; i < number_of_threads; i++) {
         thread_head_nodes[i] = allocate_thread_arrays(num_employees);
         for(uint32_t j = 0; j < num_employees; j++) {
@@ -133,14 +134,13 @@ void parallel_print_joined_database(uint32_t num_employees) {
     for(uint32_t i = 0; i < num_employees; i++) {
         employee_went_on_trip = false;
 
+        // Check if any threads found a trip for the employee
         for(uint32_t array = 0; array < number_of_threads; array++) {
             if( (thread_head_nodes[array])[i].head != NULL) employee_went_on_trip = true;
         }
         if(!employee_went_on_trip) continue;
 
-
         printf("Printing Trips for Employee ID: %u, %s\n", (thread_head_nodes[0])[i].employee_info->ID, (thread_head_nodes[0])[i].employee_info->name);
-
         for(uint32_t array = 0; array < number_of_threads; array++) {
             current_node = (thread_head_nodes[array])[i].head;
 

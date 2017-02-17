@@ -11,6 +11,7 @@
 #include "join_common.h"
 #include "serial_join.h"
 
+
 static head_node employee_node[NUM_EMPLOYEES];
 
 
@@ -18,6 +19,7 @@ static head_node employee_node[NUM_EMPLOYEES];
 // Functions
 //*****************************************************************************
 void serial_create_join_database(employee_data* employee_data_array, uint32_t num_employees) {
+    // The head should store in the employee information
     for(uint32_t i = 0; i < num_employees; i++) {
         employee_node[i].employee_info = &(employee_data_array[i]);
         employee_node[i].head = NULL;

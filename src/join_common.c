@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "join_common.h"
 
+
 Node* allocate_node(trip_data* trip_info, Node* previous_head_node) {
     Node* new_node = malloc( sizeof(Node) );
     if(new_node == NULL) {
