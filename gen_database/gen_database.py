@@ -44,14 +44,28 @@ def generate_random_name(first_names, last_names):
     return name
 
 
+def get_unique_employee_ID(IDs_already_assigned):
+    min_employee_ID = 0
+    max_employee_ID = 200000
+
+    ID_number = get_random_number(min_employee_ID, max_employee_ID)
+    while( ID_number in IDs_already_assigned ):
+        ID_number = get_random_number(min_employee_ID, max_employee_ID)
+
+    return ID_number
+
+
 def generate_employee_database(first_names, last_names):
     employees = list()
+    IDs_already_assigned = list()
 
-    for employee_id in range(0,20000):
+    for num in range(0,20000):
         employee_info = dict()
-        employee_info['ID'] = employee_id
+        ID_number = get_unique_employee_ID(IDs_already_assigned)
+        employee_info['ID'] = ID_number
         employee_info['name'] = generate_random_name(first_names, last_names)
         employees.append(employee_info)
+        IDs_already_assigned.append(ID_number)
 
     return employees
 
