@@ -16,15 +16,10 @@ struct Node {
     Node *next;
 };
 
-typedef struct {
-    employee_data *employee_info;
-    Node* head;
-} head_node;
-
 // Functions
 Node* allocate_node(trip_data*, Node*);
 void add_trip_to_head(Node**, trip_data*);
-void free_nodes(head_node*, uint32_t);
+void free_nodes(Node**, uint32_t);
 
 #endif
 

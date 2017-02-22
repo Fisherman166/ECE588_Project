@@ -23,16 +23,18 @@ Node* allocate_node(trip_data* trip_info, Node* previous_head_node) {
 
 
 void add_trip_to_head(Node** head_node, trip_data* trip) {
+    //printf(" add trip Before: %p\n", *head_node);
     *head_node = allocate_node(trip, *head_node);
+    //printf("add trip After: %p\n", *head_node);
 }
 
 
-void free_nodes(head_node* head_array, uint32_t num_employees) {
+void free_nodes(Node** head_array, uint32_t num_employees) {
     Node* current_node;
     Node* next_node;
 
     for(uint32_t i = 0; i < num_employees; i++) {
-        current_node = head_array[i].head;
+        current_node = head_array[i];
         while(current_node != NULL) {
             next_node = current_node->next;
             free(current_node);
