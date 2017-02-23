@@ -12,7 +12,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include "common.h"
-#include "parallel_join.h"
+#include "join.h"
 
 static employee_data employees[NUM_EMPLOYEES];
 static trip_data trips[NUM_TRIPS];
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     create_employee_database(&(employees[0]));
     create_trip_database(&(trips[0]));
 
-    parallel_create_join_database(&(trips[0]), NUM_EMPLOYEES, number_of_threads);
+    create_join_database(&(trips[0]), NUM_EMPLOYEES, number_of_threads);
 
     get_system_time(&start_time);
     run_threads(number_of_threads);
@@ -41,8 +41,8 @@ int main(int argc, char* argv[]) {
     unsigned long long int runtime = calc_runtime(start_time, end_time);
     printf("Time = %llu nanoseconds\t(%llu.%09llu sec)\n", runtime, runtime / 1000000000, runtime % 1000000000);
 
-    parallel_print_joined_database(&(employees[0]), NUM_EMPLOYEES);
-    parallel_cleanup_joined_database(NUM_EMPLOYEES);
+    print_joined_database(&(employees[0]), NUM_EMPLOYEES);
+    cleanup_joined_database(NUM_EMPLOYEES);
 }
 
 

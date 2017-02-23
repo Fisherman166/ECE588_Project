@@ -1,1 +1,0 @@
-gcc -std=gnu99 -Wall -o main main.c serial_join.c parallel_join.c join_common.c -lpthread -lrt
