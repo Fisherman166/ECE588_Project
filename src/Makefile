@@ -3,6 +3,6 @@ source= main.c join.c
 depend= join.h common.h
 libs= -lpthread -lrt
 all:
-	$(CC) -std=gnu99 -Wall -o main $(source) $(libs)
+	$(CC) -std=gnu99 -Wall -o database_join $(source) $(libs)
 clean:
-	rm main
+	rm database_join
