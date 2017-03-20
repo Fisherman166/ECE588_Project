@@ -11,20 +11,29 @@ exit(0);
 ###############################################################################
 sub main() {
     my $max_threads = 31;
+	my $max_iter = 20;
     my $output_filename = "output_project.txt";
     my $single_thread_time;
 
     open(my $project_output_file, '>', $output_filename) or die "ERROR: Could not open $output_filename for write.";
     
     for(my $num_threads = 1; $num_threads <= $max_threads; $num_threads++) {
+		my $total_time 	=0;
+		my $avg_time 	=0;
+		my $runtime_secs =0;
+		
+	    for(my $num_runs = 1; $num_runs <= $max_iter; $num_runs++) {
         my $cmd = "./database_join $num_threads";
         print "Running cmd: $cmd\n";
         my $output = `$cmd`;
 
-        my $runtime_secs = &extract_seconds($output);
+        $runtime_secs = &extract_seconds($output);
+		$total_time= $total_time + $runtime_secs ;
+		}
+		$avg_time = $total_time / $max_iter ;
         my $speedup;
         if($num_threads > 1) {
-            $speedup = &calc_speedup($single_thread_time, $runtime_secs);
+            $speedup = &calc_speedup($single_thread_time, $avg_time);
         }
         else {
             $speedup = 1.0;
